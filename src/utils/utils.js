@@ -221,14 +221,45 @@ module.exports = {
         { role: 'user', content: `${config.get('openai.user_content')}${transcription}` },
       ];
 
-      const openai = new OpenAI(process.env.OPENAI_API_KEY);
+      const apiUrl = process.env.AI_API_URL || config.get('summary_api.url');
+      const apiKey = process.env.AI_API_KEY || config.get('summary_api.api_key');
+      const model = process.env.AI_TEXT_MODEL_NAME || config.get('summary_api.model');
+      const temperature = config.get('summary_api.temperature');
+      const timeoutMs = config.get('summary_api.timeout_ms');
 
-      const response = await openai.chat.completions.create({
-        model: config.get('openai.summary_model'),
-        messages: messages,
-      });
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-      return response.choices[0].message.content;
+      let response;
+      try {
+        response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${apiKey}`,
+          },
+          body: JSON.stringify({
+            model,
+            messages,
+            temperature,
+          }),
+          signal: controller.signal,
+        });
+      } finally {
+        clearTimeout(timeoutId);
+      }
+
+      if(!response.ok) {
+        const bodyText = await response.text();
+        throw new Error(`Summary API error ${response.status}: ${bodyText}`);
+      }
+
+      const data = await response.json();
+      const content = data?.choices?.[0]?.message?.content;
+      if(!content)
+        throw new Error('Summary API returned empty content');
+
+      return content.trim();
     } catch(e) {
       console.error('Error while summarizing:', e.message);
       throw new Error('Summary failed');

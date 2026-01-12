@@ -61,13 +61,13 @@ You can also run the bot using Docker.
 1. Build the Docker image:
 
    ```sh
-   docker build -t weekly-transcription-bot .
+   docker build -t fo-transcription-bot .
    ```
 
 2. Run the Docker container:
 
    ```sh
-   docker run -d --name weekly-transcription-bot --env-file .env weekly-transcription-bot
+   docker run -d --name fo-transcription-bot --env-file .env fo-transcription-bot
    ```
 
 ## Configuration

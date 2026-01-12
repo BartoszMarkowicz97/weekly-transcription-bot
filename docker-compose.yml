@@ -1,0 +1,9 @@
+services:
+  bot:
+    build: .
+    container_name: fo-transcription-bot
+    env_file:
+      - .env
+    volumes:
+      - /home/admin_fo_2025/Transkryptor:/bot/meetings
+    restart: unless-stopped

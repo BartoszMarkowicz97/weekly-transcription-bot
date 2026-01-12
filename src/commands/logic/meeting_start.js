@@ -207,6 +207,8 @@ module.exports = {
         });
 
         receiver.speaking.on('end', (userId) => {
+          if(!state.userStreams) return; // ← Add this line
+          
           const streamInfo = state.userStreams.get(userId);
           if(streamInfo) {
             streamInfo.audioStream.destroy();

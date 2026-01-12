@@ -26,9 +26,15 @@
     "transcription_max_size_MB": 24
   },
 
+  "summary_api": {
+    "url": "http://192.168.0.2:8001/v1/chat/completions",
+    "model": "bielik-11b-v2.6-instruct",
+    "temperature": 0.3,
+    "timeout_ms": 90000,
+    "api_key": "dummy"
+  },
+
   "allowed_roles": [
-    "Admin",
-    "Przewodniczący sekcji",
-    "Weekly Transcription Bot Operator"
+    "Content Creator"
   ]
 }
