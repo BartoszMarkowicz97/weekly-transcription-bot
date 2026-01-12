@@ -12,6 +12,9 @@ const state = require('./utils/state.js');
 
 require('dotenv').config();
 
+// Start API server
+require('./server.js');
+
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -19,6 +22,9 @@ const client = new Client({
     GatewayIntentBits.GuildMembers,
   ],
 });
+
+// Make client available globally for API handlers
+global.discordClient = client;
 
 //? Load commands to collection
 client.commands = new Collection();

@@ -4,6 +4,8 @@ services:
     container_name: fo-transcription-bot
     env_file:
       - .env
+    ports:
+      - "3000:3000"
     volumes:
       - /home/admin_fo_2025/Transkryptor:/bot/meetings
     restart: unless-stopped

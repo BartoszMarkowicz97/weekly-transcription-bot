@@ -212,9 +212,12 @@ module.exports = {
     }
   },
 
-  summarize: async (transcriptionPath) => {
+  summarize: async (transcriptionInput) => {
     try {
-      const transcription = fs.readFileSync(transcriptionPath, 'utf-8');
+      // Allow passing either a file path or the raw transcription text
+      let transcription = transcriptionInput;
+      if(typeof transcriptionInput === 'string' && fs.existsSync(transcriptionInput))
+        transcription = fs.readFileSync(transcriptionInput, 'utf-8');
 
       const messages = [
         { role: 'system', content: config.get('openai.system_content').join('') },
